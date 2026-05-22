@@ -1,0 +1,12 @@
+# STM32CubeIDE / Eclipse gereksizleri
+Debug/
+Release/
+.settings/
+.mcpprod/
+*.bbl
+*.blg
+*.pdf
+
+# İşletim sistemi dosyaları
+.DS_Store
+Thumbs.db
