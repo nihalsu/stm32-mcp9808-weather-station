@@ -3,7 +3,7 @@
 This project demonstrates analog-to-digital conversion (ADC) on an STM32 microcontroller. It continuously samples an analog input, converts the 16-bit raw data into a voltage value, and utilizes the Board Support Package (BSP) for board-specific hardware management.
 
 ## Project Overview
-![ADC Ölçüm Şeması](adc_diagram.png)
+![ADC Ölçüm Şeması](adc_diagram.jpeg)
 
 ## Features
 - **High-Resolution Sampling:** Configured for 16-bit resolution to ensure precise voltage measurement.
