@@ -1,56 +1,61 @@
-# STM32 High-Resolution ADC Voltage Measurement
+# STM32 MCP9808 Temperature Monitor & OLED Visualizer
 
-This project demonstrates analog-to-digital conversion (ADC) on an STM32 microcontroller. It continuously samples an analog input, converts the 16-bit raw data into a voltage value, and utilizes the Board Support Package (BSP) for board-specific hardware management.
-
-## Project Overview
-![ADC Ölçüm Şeması](adc_diagram.jpeg)
+This project implements a smart temperature monitoring system using the MCP9808 I2C sensor and an SSD1306 OLED display. It features dynamic icon rendering based on ambient temperature and critical alert thresholds.
+![Weather](weather.jpeg)
 
 ## Features
-- **High-Resolution Sampling:** Configured for 16-bit resolution to ensure precise voltage measurement.
-- **Continuous Conversion:** Uses continuous mode to keep the ADC running in the background.
-- **Calibration:** Performs automatic calibration at startup for measurement accuracy.
-- **BSP Integration:** Utilizes STM32 BSP libraries for LED and user button management.
+- **High-Precision Sensing:** Uses MCP9808 (±0.25°C typical accuracy).
+- **Dynamic Visualization:** Displays temperature-based icons (Sun, Cloud, Snowman) on the OLED screen.
+- **Alert System:** Monitors user-defined upper, lower, and critical temperature limits.
+- **Custom Graphics:** Bitmapped 32x32 icons rendered via custom buffer handling.
 
-## Technical Details
+## Technical Architecture
+
+
 - **Microcontroller:** STM32
-- **Peripheral:** ADC1 (Analog-to-Digital Converter)
-- **Resolution:** 16-bit (0-65535)
-- **Reference Voltage:** 3.3V
-- **Communication:** BSP COM port interface
+- **Sensor:** MCP9808 (I2C)
+- **Display:** SSD1306 OLED (I2C)
+- **Language:** C (HAL Library)
 
 ## How It Works
-1. **Calibration:** `HAL_ADCEx_Calibration_Start` is called to compensate for internal offset errors.
-2. **ADC Loop:** The ADC continuously polls for conversion results.
-3. **Calculation:** The raw 16-bit integer is mapped to a float voltage value using the formula:
-   $Voltage = \frac{ADC_{value} \times 3.3}{65535.0}$
+1. **Communication:** The system uses I2C1 for the MCP9808 sensor and I2C2 (or 1) for the OLED.
+2. **Data Processing:** Raw data from the sensor is converted into Celsius using bitwise manipulation.
+3. **Logic:** - < 16°C: Snowman icon (Cold)
+   - 16°C - 25°C: Cloud icon (Mild)
+   - > 25°C: Sun icon (Hot)
+4. **Alerts:** The software monitors bits in the sensor's temperature register to display "CRITICAL", "HIGH", or "LOW" warnings.
 
 ## License
 Copyright (c) 2026 STMicroelectronics. Provided as-is.
 
------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-# STM32 Yüksek Çözünürlüklü ADC Voltaj Ölçümü
+---------------------------------------------------------------------------------------------------------------------------------------------------
+# STM32 MCP9808 Sıcaklık İzleme & OLED Görselleştirici
 
-Bu proje, bir STM32 mikrokontrolcüsü üzerinde Analog-Dijital Dönüştürücü (ADC) kullanımını göstermektedir. Analog girişi sürekli örnekleyerek 16-bit ham veriyi gerçek voltaj değerine dönüştürür ve donanım yönetimi için BSP (Board Support Package) kütüphanelerini kullanır.
+Bu proje, MCP9808 I2C sıcaklık sensörü ve SSD1306 OLED ekran kullanarak geliştirilmiş akıllı bir sıcaklık izleme sistemidir. Ortam sıcaklığına göre dinamik olarak güncellenen simgeler (Güneş, Bulut, Kardan Adam) ve kritik sıcaklık uyarıları içerir.
+
+## Proje Genel Bakış
+
 
 ## Özellikler
-- **Yüksek Çözünürlüklü Örnekleme:** Hassas voltaj ölçümü için 16-bit çözünürlükte yapılandırılmıştır.
-- **Sürekli Dönüşüm:** ADC'nin arka planda sürekli çalışması için "Continuous Mode" kullanılmıştır.
-- **Kalibrasyon:** Ölçüm doğruluğunu artırmak için başlangıçta otomatik kalibrasyon gerçekleştirilir.
-- **BSP Entegrasyonu:** LED ve buton yönetimi için standart STM32 BSP kütüphaneleri kullanılmıştır.
+- **Yüksek Hassasiyet:** MCP9808 (tipik ±0.25°C doğruluk) kullanımı.
+- **Dinamik Görselleştirme:** Sıcaklık değerine göre OLED ekran üzerinde otomatik değişen simgeler.
+- **Uyarı Sistemi:** Kullanıcı tarafından tanımlanan alt, üst ve kritik sıcaklık limitlerinin takibi.
+- **Özel Grafikler:** Bitmap tabanlı 32x32 piksel simgelerin ekran tamponuna (buffer) çizdirilmesi.
 
-## Teknik Detaylar
+## Teknik Mimari
 - **Mikrokontrolcü:** STM32
-- **Çevre Birimi:** ADC1 (Analog-Dijital Dönüştürücü)
-- **Çözünürlük:** 16-bit (0-65535)
-- **Referans Voltajı:** 3.3V
-- **Haberleşme:** BSP COM port arayüzü
+- **Sensör:** MCP9808 (I2C)
+- **Ekran:** SSD1306 OLED (I2C)
+- **Programlama Dili:** C (HAL Kütüphanesi)
 
 ## Çalışma Mantığı
-1. **Kalibrasyon:** İçsel sapma hatalarını gidermek için `HAL_ADCEx_Calibration_Start` fonksiyonu kullanılır.
-2. **ADC Döngüsü:** ADC, sonuçları sürekli olarak yoklar (poll).
-3. **Hesaplama:** Ham 16-bit tamsayı değer, aşağıdaki formül ile float voltaj değerine dönüştürülür:
-   $Voltaj = \frac{ADC_{degeri} \times 3.3}{65535.0}$
+1. **İletişim:** Sistem, MCP9808 sensörü için I2C1, ekran için I2C hatlarını kullanır.
+2. **Veri İşleme:** Sensörden gelen ham veriler, bit düzeyinde işlemlerle (°C) cinsine dönüştürülür.
+3. **Mantık:** - < 16°C: Kardan adam simgesi (Soğuk)
+   - 16°C - 25°C: Bulut simgesi (Ilık)
+   - > 25°C: Güneş simgesi (Sıcak)
+4. **Alarmlar:** Sensörün durum kaydedicisi (register) anlık olarak izlenir; kritik, yüksek veya düşük ısı durumlarında ekrana uyarı yazılır.
 
 ## Lisans
 Telif Hakkı (c) 2026 STMicroelectronics. "Olduğu gibi" sağlanmıştır.
