@@ -1,6 +1,8 @@
 # STM32 MCP9808 Temperature Monitor & OLED Visualizer
 
 This project implements a smart temperature monitoring system using the MCP9808 I2C sensor and an SSD1306 OLED display. It features dynamic icon rendering based on ambient temperature and critical alert thresholds.
+
+
 ![Weather](weather.jpeg)
 
 ## Features
